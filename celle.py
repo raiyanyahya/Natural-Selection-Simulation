@@ -1,5 +1,6 @@
 __author__ = "Raiyan Yahya"
 import pygame
+from random import randint
 
 white = (255, 255, 255)
 green = (92, 225, 15)
@@ -23,20 +24,18 @@ class Celle(pygame.sprite.Sprite):
     def __init__(self, x_position, y_position, width, height, radius=4, color=green, velocity=[0, 0], lifespan=30,
                  mutate=False, generation=0):
         super().__init__()
+        self.radius = radius
         self.mutate = mutate
         self.generation = generation
-        self.image = pygame.Surface([radius * 2, radius * 2])
+        self.image = pygame.Surface([self.radius * 2, self.radius * 2])
         self.image.fill(white)
-        pygame.draw.circle(self.image, generation_color[generation], (radius, radius), radius)
+        pygame.draw.circle(self.image, generation_color[generation], (self.radius, self.radius), self.radius)
         self.rect = self.image.get_rect()
         self.position = [x_position, y_position]
         self.velocity = velocity
         self.WIDTH = width
         self.HEIGHT = height
         self.lifespan = lifespan
-        if self.mutate:
-            self.increase_velocity()
-            self.increase_life()
 
     def update(self):
         self.position[0] = self.position[0] + self.velocity[0]
@@ -65,5 +64,9 @@ class Celle(pygame.sprite.Sprite):
         self.lifespan += 30
 
     def increase_velocity(self):
-        self.velocity[0] = self.velocity[0] * 3
-        self.velocity[1] = self.velocity[1] * 3
+        self.velocity[0] = self.velocity[0] * 2
+        self.velocity[1] = self.velocity[1] * 2
+
+    def trigger_mutation(self):
+        self.increase_velocity()
+        self.increase_life()
