@@ -32,11 +32,14 @@ class Simulator:
             self.krytonite_group.add(kryptonite)
             self.sim_group.add(kryptonite)
 
-    def generate_celle(self, n, mutate=False):
+    def generate_celle(self, n, mutate=False,parent=None):
         for _ in range(n):
             vel = [random.random() * 2 - 1 for _ in range(0, 2)]
+            generation=0
+            if parent:
+                generation = parent.generation +1
             celle = Celle(random.randint(0, self.WIDTH + 1), random.randint(0, self.HEIGHT + 1), self.WIDTH,
-                          self.HEIGHT, velocity=vel, mutate=mutate)
+                          self.HEIGHT, velocity=vel, mutate=mutate,generation=generation)
             self.celle_group.add(celle)
             self.sim_group.add(celle)
 
@@ -52,14 +55,14 @@ class Simulator:
             eaten_krypto__group = pygame.sprite.groupcollide(self.celle_group, self.krytonite_group, False, True, )
             for celle in eaten_krypto__group:
                 celle.increase_life()
-                self.generate_celle(1, mutate=True)
+                self.generate_celle(1, mutate=True,parent=celle)
             eaten_krypto__group.clear()
             if step % 5 == 0:
                 self.generate_kryptonites(5)
             screen.fill((255, 255, 255))
             self.sim_group.draw(screen)
             pygame.display.flip()
-            clock.tick(10)
+            clock.tick(30)
 
         pygame.quit()
 
